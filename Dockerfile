@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl bsdtar && 
     apt-get purge -y --auto-remove --purge curl bsdtar && apt-get clean && \
     rm -rf /var/lib/apt/lists/* /usr/share/doc/* /usr/share/X11/locale
 
-# create mount point
+# create user and mount point
 RUN useradd -m -s /bin/bash wix
 RUN mkdir /work && chown wix:wix -R /work
 VOLUME /work
