@@ -6,6 +6,6 @@ if [ -d "$1" ] ; then
 elif [ -f "$1" ] ; then
     bn=/usr/local/bin/`basename $1 .exe`
     ( echo '#!/bin/sh"; echo "exec wine "'$1'" "$@"' ) > "$bn"
-    echo -n " \"$bn\"" >> $binlst
+    echo -n " \"`basename $1 .exe`\"" >> $binlst
     chmod +x $bn
 fi

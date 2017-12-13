@@ -2,5 +2,5 @@
 if [ $# -ge 1 ] ; then
     CMD=$1
     shift
-    cd /work$WD && $CMD "$@"
+    cd /work$WD && exec $CMD "$@"
 fi
