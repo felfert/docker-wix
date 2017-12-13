@@ -4,12 +4,12 @@ FROM i386/debian:stable-slim
 RUN apt-get update && apt-get install -y bsdtar curl make wine procps
 
 # Copy resources
-COPY exelink.sh /tmp/
-ADD pwrap waiton https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks /usr/local/bin/
+ADD exelink.sh /tmp/
+ADD pwrap waiton /usr/local/bin/
 
 # winetricks
-#RUN curl -SL https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
-#   > /usr/local/bin/winetricks
+RUN curl -SL https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
+   > /usr/local/bin/winetricks
 
 # wix
 RUN mkdir -p /opt/wix/bin && \
