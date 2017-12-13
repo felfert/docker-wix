@@ -2,5 +2,14 @@
 if [ $# -ge 1 ] ; then
     CMD=$1
     shift
+    declare -a args=()
+    for p in "$@" ; do
+        case "$p" in
+            /*) p="/work$p" ;;
+            *) ;;
+        esac
+        args+=("$p")
+    done
+    set -- "${args[@]}"
     cd /work$WD && exec $CMD "$@"
 fi
