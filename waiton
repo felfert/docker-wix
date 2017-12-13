@@ -1,0 +1,6 @@
+#!/bin/sh
+echo -n "Waiting on $@ ..."
+while pgrep -u wix "$@" > /dev/null; do
+		sleep 1
+done
+echo " completed"
