@@ -1,5 +1,5 @@
 #!/bin/bash
-binlst=/tmp/wixbins.lst
+binlst=/usr/local/etc/wixbins.lst
 if [ -d "$1" ] ; then
     touch $binlst
     find "$1" -name "*.exe" -type f -exec sh $0 "{}" \;
