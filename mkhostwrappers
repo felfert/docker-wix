@@ -2,7 +2,7 @@
 cat<<'REALEOF'
 cat >candle<<EOF
 #!/bin/sh
-exec docker run -it --rm -e WD=\`pwd\` -h \`hostname\` -v /:\`pwd\` felfert/wix \`basename \$0\` "\$@"
+exec docker run -it --rm -e WD=\`pwd\` -h \`hostname\` -v /:/work felfert/wix \`basename \$0\` "\$@"
 EOF
 chmod +x candle
 REALEOF
