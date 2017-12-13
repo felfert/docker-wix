@@ -17,13 +17,15 @@ RUN curl -SL https://raw.githubusercontent.com/Winetricks/winetricks/master/src/
 
 # wix
 RUN printf '#!/bin/bash\n\
+binlst=/usr/local/etc/wixbins.lst
 if [ -d "$1" ] ; then\n\
+    touch $binlst\n\
     find "$1" -name "*.exe" -type f -exec sh $0 "{}" \;\n\
 elif [ -f "$1" ] ; then\n\
-     bn=/usr/local/bin/`basename $1 .exe`\n\
-     ( echo "#!/bin/sh"; echo "exec wine $1 \\"\\$@\\"" ) > "$bn"\n\
-     echo -n " \\"$bn\\"" >> //usr/share/wixbins\n\
-     chmod +x $bn || true\n\
+    bn=/usr/local/bin/`basename $1 .exe`\n\
+    ( echo "#!/bin/sh"; echo "exec wine $1 \\"\\$@\\"" ) > "$bn"\n\
+    echo -n " \\"$bn\\"" >> $binlst\n\
+    chmod +x $bn || true\n\
 fi\n' > /tmp/exelink.sh && mkdir -p /opt/wix/bin && \
     apt-get install -y && mkdir -p /opt/wix/bin && \
     curl -SL https://github.com/wixtoolset/wix3/releases/download/wix311rtm/wix311-binaries.zip | \
