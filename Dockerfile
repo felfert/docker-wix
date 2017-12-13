@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y bsdtar curl make wine procps
 
 # Copy resources
 ADD exelink.sh /tmp/
-ADD pwrap waiton /usr/local/bin/
+ADD pwrap waiton mkhostwrappers /usr/local/bin/
 
 # winetricks
 RUN curl -SL https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
