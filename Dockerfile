@@ -17,7 +17,7 @@ RUN curl -SL https://raw.githubusercontent.com/Winetricks/winetricks/master/src/
 
 # wix
 RUN printf '#!/bin/bash\n\
-binlst=/usr/local/etc/wixbins.lst
+binlst=/usr/local/etc/wixbins.lst\n\
 if [ -d "$1" ] ; then\n\
     touch $binlst\n\
     find "$1" -name "*.exe" -type f -exec sh $0 "{}" \;\n\
