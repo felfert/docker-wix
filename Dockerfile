@@ -36,7 +36,7 @@ RUN wine wineboot --init \
 
 # reduce image size
 USER root
-RUN rm -rf /usr/share/doc /usr/share/X11/locale && find /var/lib/apt/ -name *.lz4 | xargs rm -f
+RUN rm -rf /usr/share/doc /usr/share/X11/locale && find /var/lib/apt/ -name "*.lz4" | xargs rm -f
 
 USER wix
 ENTRYPOINT ["pwrap"]
