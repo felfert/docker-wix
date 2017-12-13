@@ -1,5 +1,7 @@
 FROM i386/debian:stable-slim
 
+LABEL maintainer="docker-wix@fritz-elfert.de"
+
 # misc prerequisites
 RUN apt-get update && apt-get install -y bsdtar curl make wine procps
 
@@ -34,7 +36,7 @@ RUN wine wineboot --init \
 
 # reduce image size
 USER root
-RUN rm -rf /usr/share/doc /usr/share/X11/locale 
+RUN rm -rf /usr/share/doc /usr/share/X11/locale && find /var/lib/apt/ -name *.lz4 | xargs rm -f
 
 USER wix
 ENTRYPOINT ["pwrap"]
