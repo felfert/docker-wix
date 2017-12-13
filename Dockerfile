@@ -22,6 +22,7 @@ if [ -d "$1" ] ; then\n\
 elif [ -f "$1" ] ; then\n\
      bn=/usr/local/bin/`basename $1 .exe`\n\
      ( echo "#!/bin/sh"; echo "exec wine $1 \\"\\$@\\"" ) > "$bn"\n\
+     echo -n " \\"$bn\\"" >> //usr/share/wixbins\n\
      chmod +x $bn || true\n\
 fi\n' > /tmp/exelink.sh && mkdir -p /opt/wix/bin && \
     apt-get install -y && mkdir -p /opt/wix/bin && \
