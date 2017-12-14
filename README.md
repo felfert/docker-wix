@@ -37,7 +37,7 @@ light -sval MyProduct.wixobj
 ## Known limitations
 * For security reasons, **only** environment variables starting with **WIX_** are
 propagated into the docker container. If you want to make use of the ${env.VARNAME}
-featuer in WiX, you therefore must name your variables accordingly.
+feature in WiX, you therefore must name your variables accordingly.
 * The image is quite big (926 Mb currently). With alpine, this could be much smaller.
 Unfortunately however, the wine package from alpine fails to install dotnet40 which is
 an essential prerequisite for WiX.
