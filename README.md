@@ -34,6 +34,17 @@ to your Linux system. E.g.:
 candle MyProduct.wxs
 light -sval MyProduct.wixobj
 ```
-## Known bug
-The "light" tool **must** be invoked with **disabled msi validation** (-sval option),
+## Known limitations
+* For security reasons, **only** environment variables starting with **WIX_** are
+propagated into the docker container. If you want to make use of the ${env.VARNAME}
+featuer in WiX, you therefore must name your variables accordingly.
+* The image is quite big (926 Mb currently). With alpine, this could be much smaller.
+Unfortunately however, the wine package from alpine fails to install dotnet40 which is
+an essential prerequisite for WiX.
+
+## Known bugs
+* The "light" tool **must** be invoked with **disabled msi validation** (-sval option),
 otherwise it fails on wine.
+* When propagating *WIX_* environment variables into the container, the values are **not**
+modified if they contain an absolute path. As a workaround, you must prefix these values
+with */work* yourself.
