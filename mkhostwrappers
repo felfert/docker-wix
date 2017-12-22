@@ -6,7 +6,11 @@ EVARS=
 for ev in \`env | grep ^WIX_|cut -d= -f1\` ; do
     EVARS="\$EVARS -e \$ev"
 done
-exec docker run -it --rm -e WD=\`pwd\` \$EVARS -h \`hostname\` -v /:/work felfert/wix \`basename \$0\` "\$@"
+SECOPT=
+if docker run --help | grep -q -- --security-opt ; then
+    SECOPT="--security-opt label:disable"
+fi
+exec docker run \$SECOPT -it --rm -e WD=\`pwd\` \$EVARS -h \`hostname\` -v /:/work felfert/wix \`basename \$0\` "\$@"
 EOF
 chmod +x candle
 REALEOF
