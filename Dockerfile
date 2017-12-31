@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl && \
 # wix
 RUN apt-get update && apt-get install -y --no-install-recommends curl bsdtar && \
     mkdir -p /opt/wix/bin && \
-    curl -kSL https://github.com/wixtoolset/wix3/releases/download/wix311rtm/wix311-binaries.zip | \
+    curl -kSL https://github.com/wixtoolset/wix3/releases/download/wix3111rtm/wix311-binaries.zip | \
     bsdtar -C /opt/wix/bin -xf - && sh /tmp/exelink.sh /opt/wix/bin && rm -f /tmp/exelink.sh && \
     apt-get purge -y --auto-remove --purge curl bsdtar && apt-get clean && \
     rm -rf /var/lib/apt/lists/* /usr/share/doc/* /usr/share/X11/locale
