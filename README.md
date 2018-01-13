@@ -19,7 +19,7 @@ Change into a suitable directory in your **PATH**, then run
 docker run --rm felfert/wix mkhostwrappers | sh
 ```
 Notice the **absence** of the usual *-it* parameter. Of course, you need write
-permissions, so if you want to do create the wrappers in /sr/local/bin, then
+permissions, so if you want to do create the wrappers in /usr/local/bin, then
 you would use instead:
 ```
 docker run --rm felfert/wix mkhostwrappers | sudo sh
@@ -28,7 +28,7 @@ Alternatively, use a newly created directory and later set your **PATH** variabl
 accordingly.
 
 The above command creates a wrapper script (candle) as well as a bunch of symlinks.
-From now on, you simply can invoke the various WiX tools as if the were native
+From now on, you simply can invoke the various WiX tools as if they were native
 to your Linux system. E.g.:
 ```
 candle MyProduct.wxs
