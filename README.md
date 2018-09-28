@@ -16,13 +16,13 @@ For this, the special command mkhostwrappers is used like this:
 
 Change into a suitable directory in your **PATH**, then run
 ```
-docker run --rm felfert/wix mkhostwrappers | sh
+docker run --rm docker.echo360.net/wix mkhostwrappers | sh
 ```
 Notice the **absence** of the usual *-it* parameter. Of course, you need write
 permissions, so if you want to do create the wrappers in /usr/local/bin, then
 you would use instead:
 ```
-docker run --rm felfert/wix mkhostwrappers | sudo sh
+docker run --rm docker.echo360.net/wix mkhostwrappers | sudo sh
 ```
 Alternatively, use a newly created directory and later set your **PATH** variable
 accordingly.
