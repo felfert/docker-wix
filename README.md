@@ -1,7 +1,7 @@
 # docker-wix
-Yet another dockerized WiX toolset
+Dockerized WiX toolset, focussed on easy setup/usage
 
-This docker image is focused on ease of use. Instead of
+This docker image is focussed on ease of use. Instead of
 modifying the Dockerfile or the necessity of special syntax like
 "wine candle.exe ...", this image comes with a builtin generator
 for creating wrapper scripts on the host. This results in a seamless,
