@@ -38,9 +38,10 @@ light -sval MyProduct.wixobj
 * For security reasons, **only** environment variables starting with **WIX_** are
 propagated into the docker container. If you want to make use of the ${env.VARNAME}
 feature in WiX, you therefore must name your variables accordingly.
-* The image is quite big (926 Mb currently). With alpine, this could be much smaller.
+* The image is quite big (1 Gb currently). With alpine, this could be much smaller.
 Unfortunately however, the wine package from alpine fails to install dotnet40 which is
-an essential prerequisite for WiX.
+an essential prerequisite for WiX. As of 30-12-2019, there is an experimental image
+(tagged felfert/wix:latest-slim) with a reduced size of 856 Mb.
 
 ## Known bugs
 * The "light" tool **must** be invoked with **disabled msi validation** (-sval option),
