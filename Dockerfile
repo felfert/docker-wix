@@ -12,7 +12,7 @@ ADD pwrap waiton mkhostwrappers /usr/local/bin/
 
 # winetricks
 RUN apt-get update && apt-get install -y --no-install-recommends curl && \
-    curl -kSL https://raw.githubusercontent.com/felfert/winetricks/older-but-working/src/winetricks \
+    curl -kSL https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
     > /usr/local/bin/winetricks && apt-get purge -y --auto-remove --purge curl && \
     rm -rf /var/lib/apt/lists/* /usr/share/doc/* /usr/share/X11/locale && \
     chmod +x /usr/local/bin/*
