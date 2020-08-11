@@ -33,7 +33,7 @@ VOLUME /work
 ENV WINEDEBUG=-all WD=/
 RUN apt-get update && apt-get install -y --no-install-recommends curl procps && \
     echo insecure > /home/wix/.curlrc && \
-    su -c "wine wineboot --init && waiton wineserver && winetricks --unattended dotnet40 && waiton wineserver" wix && \
+    su -c "wine wineboot --init && waiton wineserver && winetricks --unattended --force dotnet40 && waiton wineserver" wix && \
     apt-get purge -y --auto-remove --purge curl procps && apt-get clean && \
     rm -rf /home/wix/.curlrc /var/lib/apt/lists/* /usr/share/doc/* /usr/share/X11/locale \
     /home/wix/.wine/drive_c/users/wix/Temp/* /usr/local/bin/waiton /usr/local/bin/winetricks
