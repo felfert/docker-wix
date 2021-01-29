@@ -7,8 +7,12 @@ for ev in \`env | grep ^WIX_|cut -d= -f1\` ; do
     EVARS="\$EVARS -e \$ev"
 done
 SECOPT=
-if docker run --help | grep -q -- --security-opt ; then
-    SECOPT="--security-opt label:disable"
+if docker run --help 2>&1 | grep -q -- --security-opt ; then
+    if docker --help 2>&1 | grep -q podman ; then
+        :
+    else
+        SECOPT="--security-opt label:disable"
+    fi
 fi
 exec docker run \$SECOPT -it --rm -e WD=\`pwd\` \$EVARS -h \`hostname\` -v /:/work felfert/wix \`basename \$0\` "\$@"
 EOF
