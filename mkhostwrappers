@@ -9,7 +9,7 @@ done
 SECOPT=
 if docker run --help 2>&1 | grep -q -- --security-opt ; then
     if docker --help 2>&1 | grep -q podman ; then
-        :
+        SECOPT="--security-opt label=disable"
     else
         SECOPT="--security-opt label:disable"
     fi
