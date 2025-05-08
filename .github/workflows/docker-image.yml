@@ -1,0 +1,24 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set timestamp
+      run:  echo "STAMP=$(date +%s)" >> $GITHUB_ENV 
+    - name: Build Docker image (debian)
+      run:  docker build . --platform linux/386 --file Dockerfile --tag felfert/wix:${STAMP}
+    - name: Build Docker image (alpine)
+      run:  docker build . --platform linux/386 --file Dockerfile-slim --tag felfert/wix:${STAMP}-slim
+    - name: Tag Docker image (debian)
+      run:  docker tag felfert/wix:${STAMP} felfert/wix:latest
+    - name: Tag Docker image (alpine)
+      run:  docker tag felfert/wix:${STAMP}-slim felfert/wix:latest-slim

@@ -1,11 +1,17 @@
-#!/bin/sh
+#!/bin/bash
 cat<<'REALEOF'
 cat >candle<<EOF
-#!/bin/sh
+#!/bin/bash
 EVARS=
 for ev in \`env | grep ^WIX_|cut -d= -f1\` ; do
     EVARS="\$EVARS -e \$ev"
 done
+function ver { printf "%03d%03d%03d%03d" \$(echo "\$1" | tr '.' ' '); }
+APIV=\$(docker version --format '{{.Client.APIVersion}}')
+PLATOPT=
+if [ \$(ver \$APIV) -ge \$(ver 1.32) ] ; then
+PLATOPT="--platform linux/386"
+fi
 SECOPT=
 if docker run --help 2>&1 | grep -q -- --security-opt ; then
     if docker --help 2>&1 | grep -q podman ; then
@@ -14,7 +20,7 @@ if docker run --help 2>&1 | grep -q -- --security-opt ; then
         SECOPT="--security-opt label:disable"
     fi
 fi
-exec docker run \$SECOPT -it --rm -e WD=\`pwd\` \$EVARS -h \`hostname\` -v /:/work felfert/wix \`basename \$0\` "\$@"
+exec docker run \$PLATOPT \$SECOPT -it --rm -e WD=\`pwd\` \$EVARS -h \`hostname\` -v /:/work ${DOCKER_WIX:-docker.io/felfert/wix} \`basename \$0\` "\$@"
 EOF
 chmod +x candle
 REALEOF
