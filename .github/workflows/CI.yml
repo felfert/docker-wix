@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+    paths-ignore:
+      - 'LICENSE'
+      - '**/*.md'
+      - '.github/**/*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set timestamp
+      run:  echo "STAMP=$(date +%s)" >> $GITHUB_ENV 
+    - name: Build docker image (debian)
+      run:  docker build . --platform linux/386 --file Dockerfile --tag felfert/wix:${STAMP}
+    - name: Build docker image (alpine)
+      run:  docker build . --platform linux/386 --file Dockerfile-slim --tag felfert/wix:${STAMP}-slim
+    - name: Save images
+      run:  |
+          docker save -o ${STAMP}.tar felfert/wix:${STAMP}
+          docker save -o ${STAMP}-slim.tar felfert/wix:${STAMP}-slim
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: docker-wix
+        if-no-files-found: error
+        path: '*.tar'
