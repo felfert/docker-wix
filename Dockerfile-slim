@@ -45,7 +45,7 @@ RUN apk update && apk --no-cache upgrade && apk --no-cache add wine bash libpng 
 RUN adduser -D -s /bin/bash wix && mkdir /work && chown wix:wix -R /work
 COPY --from=build --chown=wix:wix /home/wix/.wine /home/wix/.wine
 COPY --from=build /opt/wix /opt/wix
-copy --from=build /usr/local/etc/wixbins.lst /usr/local/etc/wixbins.lst
+COPY --from=build /usr/local/etc/wixbins.lst /usr/local/etc/wixbins.lst
 COPY --from=build /usr/local/bin/* /usr/local/bin/
 
 VOLUME /work

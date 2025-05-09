@@ -14,6 +14,7 @@ on:
 
 jobs:
   build:
+    name: Build images
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -36,3 +37,51 @@ jobs:
         path: '*.tar'
         compression-level: 0
         retention-days: 1
+
+  scan:
+    name: Scan images
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Scan image (debian)
+      id: scan-debian
+      uses: anchore/scan-action@v6
+      with:
+        fail-build: false
+        image: "felfert/wix:${STAMP}"
+
+  report:
+    # disabled for now (scan produces invalid sarif)
+    if: ${{ false }}
+    name: Upload scan reports
+    needs: [scan]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Upload scan report (debian)
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: ${{ steps.scan-debian.outputs.sarif }}
+    - name: Scan image (alpine)
+      id: scan-alpine
+      uses: anchore/scan-action@v6
+      with:
+        fail-build: false
+        image: "felfert/wix:${STAMP}-slim"
+    - name: Upload scan report (alpine)
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: ${{ steps.scan-alpine.outputs.sarif }}
+    - name: Save images
+      run:  |
+          docker save -o ${STAMP}.tar felfert/wix:${STAMP}
+          docker save -o ${STAMP}-slim.tar felfert/wix:${STAMP}-slim
+
+  deploy:
+    if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
+    needs: [build]
+    name: Call
+    uses: ./.github/workflows/CD.yml
+    secrets: inherit
+    with:
+      caller-id: ${{ github.run_id }}
