@@ -10,6 +10,7 @@ on:
       - '**/*.md'
       - '.github/**/*'
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   build:
@@ -34,5 +35,4 @@ jobs:
         if-no-files-found: error
         path: '*.tar'
         compression-level: 0
-    - name: Output artifact ID
-      run:  echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
+        retention-days: 1
