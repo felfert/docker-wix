@@ -2,21 +2,35 @@ name: Publish
 
 on:
   workflow_call:
+    inputs:
+      caller-id:
+        required: true
+        type: string
   workflow_dispatch:
- 
+
+
 jobs:
-  publish-github:
-    name: Publish to DockerHub
+  publish-docker:
+    name: Publish to Docker Hub
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v4
+    - name: Select last successful build
+      env:
+        GH_TOKEN: ${{ github.token }}
+      if: ${{ github.event_name == 'workflow_dispatch' }}
+      run: echo ARTIFACT_SOURCE="$(gh run list -w .github/workflows/CI.yml --json databaseId,conclusion -q '.[] | select(.conclusion=="success").databaseId' | head -1)"  >> $GITHUB_ENV
+    - name: Select invoking build
+      if: ${{ github.event_name == 'workflow_call' }}
+      run: echo ARTIFACT_SOURCE="${{ inputs.caller-id }}"  >> $GITHUB_ENV
     - name: Fetch artifacts
       uses: actions/download-artifact@v4
       with:
+        github-token: "${{ secrets.ARTIFACT_READ }}"
         name: docker-wix
-    - name: ls
-        run: ls -R
-    - name: Get timestamp from image
-      run: STAMP="$(echo [0-9]*-*.tar | sed s/-.*//)" >> $GITHUB_ENV
+        run-id: ${{ env.ARTIFACT_SOURCE }}
+    - name: Set STAMP
+      run: echo STAMP="$(echo [0-9]*-*.tar | sed s/-.*//)" >> $GITHUB_ENV
     - name: Load images
       run: |
           for t in *.tar ; do
@@ -24,9 +38,13 @@ jobs:
           done
     - name: Set latest tags
       run: |
-        docker tag felfert/docker-wix:${STAMP} felfert/docker-wix:latest
-        docker tag felfert/docker-wix:${STAMP}-slim felfert/docker-wix:latest-slim
-    - name: list
-      run: docker images
-      
-      
+        docker tag felfert/wix:${STAMP} felfert/wix:latest
+        docker tag felfert/wix:${STAMP}-slim felfert/wix:latest-slim
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USER }}
+        password: ${{ secrets.DOCKER_PASS }}
+    - name: Push images
+      run: |
+        docker push -a felfert/wix
