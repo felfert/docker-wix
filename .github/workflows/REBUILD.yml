@@ -1,0 +1,37 @@
+name: Check dependencies
+
+on:
+  workflow_dispatch:
+#  schedule:
+#    - cron: "23 5 * * *"
+
+jobs:
+
+  check:
+    name: Check base images
+    runs-on: ubuntu-latest
+    outputs:
+      needrebuild: ${{ steps.debian.outputs.needs-updating || steps.alpine.outputs.needs-updating }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check i386/debian:stable-slim
+        id: debian
+        uses: lucacome/docker-image-update-checker@v2
+        with:
+          base-image: i386/debian:stable-slim
+          image: felfert/wix:latest
+      - name: Check i386/alpine
+        id: alpine
+        uses: lucacome/docker-image-update-checker@v2
+        with:
+          base-image: i386/alpine
+          image: felfert/wix:latest-slim
+
+  rebuild:
+    if: ${{ needs.check.outputs.needrebuild }}
+    needs: [check]
+    name: Call
+    uses: ./.github/workflows/CI.yml
+    secrets: inherit
+    with:
+      reason: 'upstream-change'

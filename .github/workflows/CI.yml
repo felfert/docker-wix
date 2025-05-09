@@ -11,6 +11,10 @@ on:
       - '.github/**/*'
   workflow_dispatch:
   workflow_call:
+    inputs:
+      reason:
+        required: true
+        type: string
 
 jobs:
   build:
@@ -78,7 +82,7 @@ jobs:
           docker save -o ${STAMP}-slim.tar felfert/wix:${STAMP}-slim
 
   deploy:
-    if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
+    if: ( github.event_name == 'push' && github.ref_type == 'tag' ) || inputs.reason == 'upstream-change'
     needs: [build]
     name: Call
     uses: ./.github/workflows/CD.yml

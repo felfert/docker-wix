@@ -11,17 +11,17 @@ on:
 
 jobs:
   publish-docker:
-    name: Publish to Docker Hub
+    name: Push to Docker
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Select last successful build
       env:
         GH_TOKEN: ${{ github.token }}
-      if: ${{ github.event_name == 'workflow_dispatch' }}
+      if: ${{ inputs.caller-id == '' }}
       run: echo ARTIFACT_SOURCE="$(gh run list -w .github/workflows/CI.yml --json databaseId,conclusion -q '.[] | select(.conclusion=="success").databaseId' | head -1)"  >> $GITHUB_ENV
     - name: Select invoking build
-      if: ${{ github.event_name == 'workflow_call' }}
+      if: ${{ inputs.caller-id != '' }}
       run: echo ARTIFACT_SOURCE="${{ inputs.caller-id }}"  >> $GITHUB_ENV
     - name: Fetch artifacts
       uses: actions/download-artifact@v4
