@@ -1,0 +1,32 @@
+name: Publish
+
+on:
+  workflow_call:
+  workflow_dispatch:
+ 
+jobs:
+  publish-github:
+    name: Publish to DockerHub
+    runs-on: ubuntu-latest
+    steps:
+    - name: Fetch artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: docker-wix
+    - name: ls
+        run: ls -R
+    - name: Get timestamp from image
+      run: STAMP="$(echo [0-9]*-*.tar | sed s/-.*//)" >> $GITHUB_ENV
+    - name: Load images
+      run: |
+          for t in *.tar ; do
+            docker load -i $t
+          done
+    - name: Set latest tags
+      run: |
+        docker tag felfert/docker-wix:${STAMP} felfert/docker-wix:latest
+        docker tag felfert/docker-wix:${STAMP}-slim felfert/docker-wix:latest-slim
+    - name: list
+      run: docker images
+      
+      
