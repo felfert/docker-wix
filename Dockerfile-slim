@@ -1,4 +1,4 @@
-FROM i386/debian:stable-slim AS build
+FROM debian:stable-slim AS build
 
 LABEL maintainer="docker-wix@fritz-elfert.de"
 
@@ -39,7 +39,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl procps && 
     rm -rf /home/wix/.curlrc /home/wix/.cache /var/lib/apt/lists/* /usr/share/doc/* /usr/share/X11/locale \
     /home/wix/.wine/drive_c/users/wix/Temp/* /usr/local/bin/waiton /usr/local/bin/winetricks
 
-FROM i386/alpine
+FROM alpine
 ENV WINEDEBUG=-all WD=/
 RUN apk update && apk --no-cache upgrade && apk --no-cache add wine bash libpng && apk del wget && rm -rf /var/cache/apk/*
 RUN adduser -D -s /bin/bash wix && mkdir /work && chown wix:wix -R /work

@@ -1,4 +1,4 @@
-FROM i386/debian:stable-slim
+FROM debian:stable-slim
 
 LABEL maintainer="docker-wix@fritz-elfert.de"
 
