@@ -18,14 +18,16 @@ jobs:
         id: debian
         uses: lucacome/docker-image-update-checker@v2
         with:
-          base-image: i386/debian:stable-slim
+          base-image: debian:stable-slim
           image: felfert/wix:latest
+          platforms: linux/386
       - name: Check i386/alpine
         id: alpine
         uses: lucacome/docker-image-update-checker@v2
         with:
-          base-image: i386/alpine
+          base-image: alpine
           image: felfert/wix:latest-slim
+          platforms: linux/386
 
   rebuild:
     if: ${{ false }} # debugging
