@@ -28,7 +28,8 @@ jobs:
           image: felfert/wix:latest-slim
 
   rebuild:
-    if: ${{ needs.check.outputs.needrebuild }}
+    if: ${{ false }} # debugging
+    #if: ${{ needs.check.outputs.needrebuild }}
     needs: [check]
     name: Call
     uses: ./.github/workflows/CI.yml
