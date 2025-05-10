@@ -1,5 +1,6 @@
 # docker-wix
-Dockerized WiX toolset, focussed on easy setup/usage
+
+Dockerized WiX toolset, focussed on easy setup/usage [View on GitHub](https://github.com/felfert/docker-wix)
 
 This docker image is focussed on ease of use. Instead of
 modifying the Dockerfile or the necessity of special syntax like
