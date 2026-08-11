@@ -24,19 +24,19 @@ jobs:
     name: Build images
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - name: Set timestamp
-      run:  echo "STAMP=$(date +%s)" >> $GITHUB_ENV 
+      run: echo "STAMP=$(date +%s)" >> $GITHUB_ENV
     - name: Build docker image (debian)
       run:  docker build . --platform linux/386 --file Dockerfile --tag felfert/wix:${STAMP}
     - name: Build docker image (alpine)
       run:  docker build . --platform linux/386 --file Dockerfile-slim --tag felfert/wix:${STAMP}-slim
     - name: Save images
-      run:  |
+      run: |
           docker save -o ${STAMP}.tar felfert/wix:${STAMP}
           docker save -o ${STAMP}-slim.tar felfert/wix:${STAMP}-slim
     - name: Upload artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       id: artifact-upload-step
       with:
         name: docker-wix
@@ -50,39 +50,43 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
+    - name: Fetch artifacts
+      uses: actions/download-artifact@v8
+      with:
+        github-token: "${{ secrets.ARTIFACT_READ }}"
+        name: docker-wix
+    - name: Set STAMP
+      run: echo STAMP="$(echo [0-9]*-*.tar | sed s/-.*//)" >> $GITHUB_ENV
+    - name: Load images
+      run: |
+          for t in *.tar ; do
+            docker load -i $t
+          done
     - name: Scan image (debian)
       id: scan-debian
-      uses: anchore/scan-action@latest
+      uses: anchore/scan-action@v7
       with:
         fail-build: false
-        image: "felfert/wix:${STAMP}"
-
-  report:
-    # disabled for now (scan produces invalid sarif)
-    if: ${{ false }}
-    name: Upload scan reports
-    needs: [scan]
-    runs-on: ubuntu-latest
-    steps:
+        cache-db: true
+        image: "felfert/wix:${{env.STAMP}}"
     - name: Upload scan report (debian)
-      uses: github/codeql-action/upload-sarif@v3
+      uses: github/codeql-action/upload-sarif@v4
       with:
+        category: "Image based on debian"
         sarif_file: ${{ steps.scan-debian.outputs.sarif }}
     - name: Scan image (alpine)
       id: scan-alpine
-      uses: anchore/scan-action@latest
+      uses: anchore/scan-action@v7
       with:
         fail-build: false
-        image: "felfert/wix:${STAMP}-slim"
+        cache-db: true
+        image: "felfert/wix:${{env.STAMP}}-slim"
     - name: Upload scan report (alpine)
-      uses: github/codeql-action/upload-sarif@v3
+      uses: github/codeql-action/upload-sarif@v4
       with:
+        category: "Image based on alpine"
         sarif_file: ${{ steps.scan-alpine.outputs.sarif }}
-    - name: Save images
-      run:  |
-          docker save -o ${STAMP}.tar felfert/wix:${STAMP}
-          docker save -o ${STAMP}-slim.tar felfert/wix:${STAMP}-slim
 
   deploy:
     if: ( github.event_name == 'push' && github.ref_type == 'tag' ) || inputs.reason == 'upstream-change'
