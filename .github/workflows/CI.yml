@@ -53,7 +53,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Scan image (debian)
       id: scan-debian
-      uses: anchore/scan-action@v6
+      uses: anchore/scan-action@latest
       with:
         fail-build: false
         image: "felfert/wix:${STAMP}"
@@ -71,7 +71,7 @@ jobs:
         sarif_file: ${{ steps.scan-debian.outputs.sarif }}
     - name: Scan image (alpine)
       id: scan-alpine
-      uses: anchore/scan-action@v6
+      uses: anchore/scan-action@latest
       with:
         fail-build: false
         image: "felfert/wix:${STAMP}-slim"
