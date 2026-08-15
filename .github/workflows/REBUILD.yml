@@ -28,7 +28,7 @@ jobs:
           base-image: alpine
           image: felfert/wix:latest-slim
           platforms: linux/386
-      - Print
+      - name Print
         run: echo "${{ steps.debian.outputs.needs-updating }} ${{ steps.alpine.outputs.needs-updating }}"
 
   rebuild:
