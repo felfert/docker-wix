@@ -13,21 +13,23 @@ jobs:
     outputs:
       needrebuild: ${{ steps.debian.outputs.needs-updating || steps.alpine.outputs.needs-updating }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Check i386/debian:stable-slim
         id: debian
-        uses: lucacome/docker-image-update-checker@v2
+        uses: lucacome/docker-image-update-checker@v3.1.1
         with:
           base-image: debian:stable-slim
           image: felfert/wix:latest
           platforms: linux/386
       - name: Check i386/alpine
         id: alpine
-        uses: lucacome/docker-image-update-checker@v2
+        uses: lucacome/docker-image-update-checker@v3.1.1
         with:
           base-image: alpine
           image: felfert/wix:latest-slim
           platforms: linux/386
+      - Print
+        run: echo "${{ steps.debian.outputs.needs-updating }} ${{ steps.alpine.outputs.needs-updating }}"
 
   rebuild:
     if: ${{ false }} # debugging
